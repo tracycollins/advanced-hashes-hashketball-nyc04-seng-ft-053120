@@ -1,3 +1,4 @@
+require "pry"
 # Write your code below game_hash
 def game_hash
   {
@@ -126,4 +127,75 @@ def game_hash
   }
 end
 
-# Write code here
+def num_points_scored(player_name)
+  player = game_hash.find do |team| # team is array: [home/away string, team_hash]
+    team_hash = team[1]
+    team_hash[:players].find do |player|
+      if player[:player_name] == player_name
+        return player[:points]
+      end
+    end
+  end  
+end
+
+def shoe_size(player_name)
+  player = game_hash.find do |team| # team is array: [home/away string, team_hash]
+    team_hash = team[1]
+    team_hash[:players].find do |player|
+      if player[:player_name] == player_name
+        return player[:shoe]
+      end
+    end
+  end  
+end
+
+def team_colors(team_name)
+  team_array = game_hash.find do |home_or_away, team| # team is array: [home/away string, team_hash]
+    team[:team_name] == team_name
+  end
+  team_array[1][:colors]
+end
+
+
+def team_names()
+  team_array = game_hash.collect do |home_or_away, team| # team is array: [home/away string, team_hash]
+    team[:team_name]
+  end
+end
+
+def player_numbers(team_name)
+  team_array = game_hash.flat_map do |h_or_a, team| # team is array: [home/away string, team_hash]
+    if team[:team_name] == team_name
+      return team[:players].flat_map{|player| player[:number]}
+    end
+  end
+end
+
+def player_stats(player_name)
+  team_array = game_hash.flat_map do |h_or_a, team| # team is array: [home/away string, team_hash]
+    team[:players].find do |player|
+      if player[:player_name] == player_name
+        return player
+      end
+    end
+  end
+end
+
+def big_shoe_rebounds()
+  player_big_shoe = nil
+  team_array = game_hash.flat_map do |h_or_a, team| # team is array: [home/away string, team_hash]
+    team[:players].each do |player|
+      if player_big_shoe == nil
+        player_big_shoe = player
+      end
+      # binding.pry
+      if player[:shoe] > player_big_shoe[:shoe]
+        player_big_shoe = player
+        pp player_big_shoe
+        # binding.pry
+      end
+    end
+  end
+  pp player_big_shoe
+  player_big_shoe[:rebounds]
+end
